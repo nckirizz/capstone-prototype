@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrderSync — Cashier — Home</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">OS</div>
+    <span class="logo-text">Order<strong>Sync</strong></span>
+  </div>
+  <nav><div class="nav-section">Main</div>
+<div class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8L8 2l7 6"/><path d="M3 7v7h4v-4h2v4h4V7"/></svg>Home</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="12" rx="1.5"/><path d="M1 6h14M5 10h2M9 10h2"/></svg>Point of Sale</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 8h8M2 13h5"/><path d="M11 10l2 2 3-3" stroke-linecap="round"/></svg>Orders</div>
+<div class="nav-section">Communication</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H2a1 1 0 00-1 1v7a1 1 0 001 1h3l3 3 3-3h3a1 1 0 001-1V4a1 1 0 00-1-1z"/></svg>Messages<span class="nav-badge"></span></div>
+<div class="nav-section">Other</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="10" rx="1"/><path d="M5 4V3a3 3 0 016 0v1"/><path d="M6 9h4"/></svg>Inventory</div>
+</nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar cashier">MC</div>
+      <div>
+        <div class="user-name">Maria Cashier</div>
+        <div class="user-role">Cashier</div>
+      </div>
+      <div class="online-dot"></div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="page-title">Home</div>
+      <div class="live-badge"><span class="live-dot"></span> Live</div>
+    </div>
+    <div class="topbar-right">
+      
+      <div class="topbar-avatar">MC</div>
+    </div>
+  </header>
+  <div class="content">
+
+<div class="info-banner">
+  <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><rect x="1" y="2" width="14" height="12" rx="1.5"/><path d="M1 6h14M5 10h2M9 10h2"/></svg>
+  Cashier view — process walk-in sales via POS and confirm assigned orders.
+</div>
+<div class="metrics-grid">
+  
+<div class="metric-card">
+  <div class="metric-icon ic-green"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/></svg></div>
+  <div class="metric-body">
+    <div class="metric-label">My POS Sales Today</div>
+    <div class="metric-value">₱8,240</div>
+    <div class="metric-change positive">↑ from yesterday</div>
+  </div>
+</div>
+  
+<div class="metric-card">
+  <div class="metric-icon ic-blue"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg></div>
+  <div class="metric-body">
+    <div class="metric-label">Transactions</div>
+    <div class="metric-value">18</div>
+    <div class="metric-change ">Walk-in today</div>
+  </div>
+</div>
+  
+<div class="metric-card">
+  <div class="metric-icon ic-amber"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div>
+  <div class="metric-body">
+    <div class="metric-label">Orders to Process</div>
+    <div class="metric-value">3</div>
+    <div class="metric-change warning">Needs action</div>
+  </div>
+</div>
+  
+<div class="metric-card">
+  <div class="metric-icon ic-red"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div>
+  <div class="metric-body">
+    <div class="metric-label">Low Stock Alerts</div>
+    <div class="metric-value">4</div>
+    <div class="metric-change danger">Notify admin</div>
+  </div>
+</div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">Orders to Confirm</span></div>
+  <table class="data-table">
+    <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">ORD-001</td><td>Reyes Store</td><td>3 items</td><td>₱2,400</td><td><button class="btn btn-sm btn-primary">Confirm</button></td></tr>
+      <tr><td class="mono">ORD-007</td><td>Garcia Minimart</td><td>3 items</td><td>₱2,640</td><td><button class="btn btn-sm btn-primary">Confirm</button></td></tr>
+      <tr><td class="mono">ORD-008</td><td>Manalo Grocery</td><td>2 items</td><td>₱1,760</td><td><button class="btn btn-sm btn-primary">Confirm</button></td></tr>
+    </tbody>
+  </table>
+</div>
+  </div>
+</div>
+</div>
+</body>
+</html>

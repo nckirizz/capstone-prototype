@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrderSync — Cashier — POS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">OS</div>
+    <span class="logo-text">Order<strong>Sync</strong></span>
+  </div>
+  <nav><div class="nav-section">Main</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8L8 2l7 6"/><path d="M3 7v7h4v-4h2v4h4V7"/></svg>Home</div>
+<div class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="12" rx="1.5"/><path d="M1 6h14M5 10h2M9 10h2"/></svg>Point of Sale</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 8h8M2 13h5"/><path d="M11 10l2 2 3-3" stroke-linecap="round"/></svg>Orders</div>
+<div class="nav-section">Communication</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H2a1 1 0 00-1 1v7a1 1 0 001 1h3l3 3 3-3h3a1 1 0 001-1V4a1 1 0 00-1-1z"/></svg>Messages<span class="nav-badge"></span></div>
+<div class="nav-section">Other</div>
+<div class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="10" rx="1"/><path d="M5 4V3a3 3 0 016 0v1"/><path d="M6 9h4"/></svg>Inventory</div>
+</nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar cashier">MC</div>
+      <div>
+        <div class="user-name">Maria Cashier</div>
+        <div class="user-role">Cashier</div>
+      </div>
+      <div class="online-dot"></div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="page-title">POS</div>
+      <div class="live-badge"><span class="live-dot"></span> Live</div>
+    </div>
+    <div class="topbar-right">
+      
+      <div class="topbar-avatar">MC</div>
+    </div>
+  </header>
+  <div class="content">
+
+<div class="pos-layout">
+  <div>
+    <div class="search-box" style="margin-bottom:16px">
+      <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      <input type="text" placeholder="Search or scan barcode...">
+    </div>
+    <div class="product-grid"><div class="product-card"><div class="ppc-cat">Beverages</div><div class="ppc-name">San Miguel Pale Pilsen</div><div class="ppc-price">₱1,080</div><div class="ppc-stock">36 in stock</div></div><div class="product-card"><div class="ppc-cat">Beverages</div><div class="ppc-name">Coca-Cola 1.5L (case)</div><div class="ppc-price">₱720</div><div class="ppc-stock">24 in stock</div></div><div class="product-card"><div class="ppc-cat">Beverages</div><div class="ppc-name">Pepsi 1.5L (case)</div><div class="ppc-price">₱680</div><div class="ppc-stock">18 in stock</div></div><div class="product-card"><div class="ppc-cat">Snacks</div><div class="ppc-name">Oishi Pillows 60g</div><div class="ppc-price">₱12</div><div class="ppc-stock">120 in stock</div></div><div class="product-card"><div class="ppc-cat">Snacks</div><div class="ppc-name">Nova Country Cheddar</div><div class="ppc-price">₱15</div><div class="ppc-stock">80 in stock</div></div><div class="product-card"><div class="ppc-cat">Snacks</div><div class="ppc-name">Chippy BBQ 110g</div><div class="ppc-price">₱22</div><div class="ppc-stock">65 in stock</div></div><div class="product-card"><div class="ppc-cat">LPG</div><div class="ppc-name">LPG 11kg</div><div class="ppc-price">₱980</div><div class="ppc-stock">8 in stock</div></div><div class="product-card"><div class="ppc-cat">LPG</div><div class="ppc-name">LPG 5kg</div><div class="ppc-price">₱480</div><div class="ppc-stock">12 in stock</div></div><div class="product-card"><div class="ppc-cat">Beverages</div><div class="ppc-name">Royal Tru-Orange</div><div class="ppc-price">₱660</div><div class="ppc-stock">30 in stock</div></div></div>
+  </div>
+  <div class="pos-cart">
+    <div class="cart-header">Current Transaction</div>
+    <div class="cart-items">
+      <div class="cart-line">
+        <div style="flex:1"><div class="cart-line-name">San Miguel Pale Pilsen</div><div class="cart-line-sub">₱1,080 each</div></div>
+        <div class="qty-ctrl"><button class="qty-btn">−</button><span class="qty-num">2</span><button class="qty-btn">+</button></div>
+        <div class="cart-line-total">₱2,160</div>
+      </div>
+      <div class="cart-line">
+        <div style="flex:1"><div class="cart-line-name">Oishi Pillows 60g</div><div class="cart-line-sub">₱12 each</div></div>
+        <div class="qty-ctrl"><button class="qty-btn">−</button><span class="qty-num">5</span><button class="qty-btn">+</button></div>
+        <div class="cart-line-total">₱60</div>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="total-row"><span>Subtotal</span><span>₱2,220</span></div>
+      <div class="total-row"><span>VAT (12%)</span><span>₱266.40</span></div>
+      <div class="total-row grand"><span>Total</span><span>₱2,486.40</span></div>
+      <div class="cart-actions">
+        <button class="btn" style="flex:1;justify-content:center">Clear</button>
+        <button class="btn btn-primary" style="flex:2;justify-content:center">Process Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+</div>
+</body>
+</html>
