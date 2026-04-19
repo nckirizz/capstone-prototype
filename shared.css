@@ -38,11 +38,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { font-family: var(--font); font-size: 14px; color: var(--gray-800); background: var(--gray-50); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+html { font-family: var(--font); font-size: 14px; color: var(--gray-800); background: var(--gray-100); -webkit-font-smoothing: antialiased; }
+body { width: 1440px; min-height: 900px; margin: 0; background: var(--gray-50); overflow-x: hidden; }
 
 /* Layout */
-.app     { display: flex; min-height: 100vh; }
-.main    { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.app     { display: flex; width: 1440px; min-height: 900px; }
+.main    { flex: 1; display: flex; flex-direction: column; min-height: 900px; max-width: calc(1440px - var(--sidebar-w)); }
 .content { flex: 1; padding: 24px 28px; }
 
 /* Sidebar */
