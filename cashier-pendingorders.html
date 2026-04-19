@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OrderSync — Cashier Pending Orders</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { overflow: hidden; }
+
+    .cashier-app {
+      display: grid;
+      grid-template-rows: var(--topbar-h) 1fr;
+      height: 100vh;
+    }
+
+    /* Topbar */
+    .cashier-topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+    .cashier-topbar-left  { display: flex; align-items: center; gap: 14px; }
+    .cashier-topbar-right { display: flex; align-items: center; gap: 12px; }
+    .cashier-logo { display: flex; align-items: center; gap: 10px; }
+    .cashier-logo .logo-mark {
+      width: 30px; height: 30px;
+      background: var(--green);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 11px; font-weight: 600;
+    }
+    .cashier-logo span { font-size: 15px; font-weight: 400; color: var(--gray-700); }
+    .cashier-logo strong { font-weight: 600; color: var(--gray-900); }
+    .cashier-divider { width: 1px; height: 24px; background: var(--gray-200); }
+    .cashier-screen-label {
+      font-size: 13px; font-weight: 600;
+      color: var(--green-dark);
+      background: var(--green-light);
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .cashier-user {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--gray-600);
+    }
+    .cashier-user .user-avatar {
+      width: 28px; height: 28px; font-size: 11px;
+      background: var(--blue-light); color: var(--blue-dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600;
+    }
+
+    /* Body */
+    .cashier-body {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      overflow: hidden;
+    }
+
+    /* Left panel */
+    .pos-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--gray-50);
+      overflow: hidden;
+    }
+
+    /* Tabs */
+    .cashier-tabs {
+      display: flex;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 20px;
+    }
+    .ctab {
+      padding: 12px 16px;
+      font-size: 13.5px; font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      border-top: none; border-left: none; border-right: none;
+      background: none; font-family: var(--font);
+      text-decoration: none;
+      display: inline-flex; align-items: center;
+    }
+    .ctab.active { color: var(--green-dark); border-bottom-color: var(--green); }
+
+    /* Orders panel */
+    .orders-scroll { flex: 1; overflow-y: auto; padding: 20px; }
+
+    .orders-toolbar {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      padding: 7px 12px;
+      flex: 1;
+    }
+    .search-box input {
+      border: none; background: none; outline: none;
+      font-size: 13px; color: var(--gray-800);
+      font-family: var(--font); width: 100%;
+    }
+    .filter-select {
+      padding: 7px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      font-size: 13px; color: var(--gray-700);
+      font-family: var(--font);
+    }
+
+    .order-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .15s;
+    }
+    .order-card:hover { border-color: var(--gray-300); }
+    .order-card-top {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .order-card-id {
+      font-family: var(--font-mono);
+      font-size: 13px; font-weight: 500;
+      color: var(--gray-800);
+    }
+    .order-meta {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 10px;
+    }
+    .order-meta-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--gray-500);
+    }
+    .order-meta-item svg { opacity: .6; }
+    .order-items-list {
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .order-item-row {
+      display: flex; justify-content: space-between;
+      font-size: 12.5px; color: var(--gray-600);
+      padding: 3px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .order-item-row:last-child { border-bottom: none; }
+    .order-card-bottom {
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .order-total-label { font-size: 12px; color: var(--gray-400); }
+    .order-total-value { font-size: 17px; font-weight: 700; color: var(--gray-900); }
+    .order-actions { display: flex; gap: 8px; }
+
+    .status {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; border-radius: 20px;
+      font-size: 11.5px; font-weight: 500;
+    }
+    .status.pending   { background: var(--amber-light); color: var(--amber-dark); }
+    .status.confirmed { background: var(--green-light); color: var(--green-dark); }
+    .status.rejected  { background: var(--red-light);   color: var(--red-dark); }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      background: #fff; color: var(--gray-700);
+      font-size: 13px; font-weight: 500; font-family: var(--font);
+      cursor: pointer; white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn-sm      { padding: 6px 12px; font-size: 12px; }
+    .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+    .btn-danger  { background: var(--red-light); color: var(--red-dark); border-color: #FECACA; }
+
+    /* Right: Order detail panel */
+    .order-detail-panel {
+      background: #fff;
+      border-left: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .detail-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-50);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .detail-title  { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+    .detail-sub    { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+    .detail-body   { flex: 1; overflow-y: auto; padding: 18px; }
+    .detail-section { margin-bottom: 20px; }
+    .detail-section-title {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--gray-400); margin-bottom: 10px;
+    }
+    .detail-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--gray-600);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row span:last-child { font-weight: 500; color: var(--gray-800); }
+    .detail-item-row {
+      display: flex; justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 13px;
+    }
+    .detail-item-row:last-child { border-bottom: none; }
+    .detail-item-name  { color: var(--gray-800); font-weight: 500; }
+    .detail-item-qty   { color: var(--gray-400); font-size: 12px; }
+    .detail-item-price { color: var(--gray-800); font-weight: 600; }
+    .detail-total-block {
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+    .detail-total-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--gray-500); padding: 3px 0;
+    }
+    .detail-total-row.grand {
+      font-size: 15px; font-weight: 700; color: var(--gray-900);
+      padding-top: 8px; margin-top: 6px;
+      border-top: 1px solid var(--gray-200);
+    }
+    .detail-footer {
+      padding: 14px 18px;
+      border-top: 1px solid var(--gray-200);
+      background: var(--gray-50);
+      display: flex; gap: 8px;
+    }
+    .detail-footer .btn { flex: 1; justify-content: center; }
+
+    /* Summary stats */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-label { font-size: 11px; color: var(--gray-400); margin-bottom: 4px; }
+    .stat-value { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+    .stat-sub   { font-size: 11px; margin-top: 2px; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="cashier-app">
+
+  <!-- TOPBAR -->
+  <header class="cashier-topbar">
+    <div class="cashier-topbar-left">
+      <div class="cashier-logo">
+        <div class="logo-mark">OS</div>
+        <span>Order<strong>Sync</strong></span>
+      </div>
+      <div class="cashier-divider"></div>
+      <span class="cashier-screen-label">Cashier POS</span>
+    </div>
+    <div class="cashier-topbar-right">
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--green-dark);background:var(--green-light);padding:3px 9px;border-radius:20px;">
+        <span style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;"></span> Live
+      </div>
+      <div class="cashier-user">
+        <div class="user-avatar">MC</div>
+        Maria Cashier
+      </div>
+      <a href="cashier.html" class="btn btn-sm" style="text-decoration:none">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="12" rx="1.5"/><path d="M1 6h14M5 10h2M9 10h2"/></svg>
+        Open POS
+      </a>
+      <a href="index.html" class="btn btn-sm" style="text-decoration:none">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>
+        Admin Panel
+      </a>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <div class="cashier-body">
+
+    <!-- LEFT: Orders list -->
+    <div class="pos-panel">
+      <div class="cashier-tabs">
+        <a href="cashier.html" class="ctab">Point of Sale</a>
+        <span class="ctab active">Pending Orders</span>
+      </div>
+
+      <div class="orders-scroll">
+
+        <!-- Stats -->
+        <div class="stats-bar">
+          <div class="stat-card">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" style="color:var(--amber)">3</div>
+            <div class="stat-sub" style="color:var(--amber)">Awaiting action</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Confirmed today</div>
+            <div class="stat-value" style="color:var(--green)">8</div>
+            <div class="stat-sub" style="color:var(--green)">Processed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total order value</div>
+            <div class="stat-value">₱7,528</div>
+            <div class="stat-sub" style="color:var(--gray-400)">Pending orders</div>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="orders-toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15" style="color:var(--gray-400);flex-shrink:0"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+            <input type="text" placeholder="Search by customer or order ID...">
+          </div>
+          <select class="filter-select">
+            <option>All orders</option>
+            <option selected>Pending</option>
+            <option>Confirmed</option>
+            <option>Rejected</option>
+          </select>
+        </div>
+
+        <!-- Order Cards -->
+        <div class="order-card" onclick="selectOrder(0)" id="card-0" style="border-color:var(--green);border-width:1.5px">
+          <div class="order-card-top">
+            <span class="order-card-id">ORD-001</span>
+            <span class="status pending">Pending</span>
+          </div>
+          <div class="order-meta">
+            <div class="order-meta-item">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+              Reyes Store
+            </div>
+            <div class="order-meta-item">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+              Apr 17, 10:32 AM
+            </div>
+          </div>
+          <div class="order-items-list">
+            <div class="order-item-row"><span>San Miguel Pale Pilsen × 3 cases</span><span>₱3,240</span></div>
+            <div class="order-item-row"><span>Coca-Cola 1.5L × 2 cases</span><span>₱1,440</span></div>
+          </div>
+          <div class="order-card-bottom">
+            <div>
+              <div class="order-total-label">Order total</div>
+              <div class="order-total-value">₱4,680</div>
+            </div>
+            <div class="order-actions">
+              <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();rejectOrder(this,0)">Reject</button>
+              <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();confirmOrder(this,0)">Confirm</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-card" onclick="selectOrder(1)" id="card-1">
+          <div class="order-card-top">
+            <span class="order-card-id">ORD-007</span>
+            <span class="status pending">Pending</span>
+          </div>
+          <div class="order-meta">
+            <div class="order-meta-item">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+              Garcia Minimart
+            </div>
+            <div class="order-meta-item">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+              Apr 17, 9:14 AM
+            </div>
+          </div>
+          <div class="order-items-list">
+            <div class="order-item-row"><span>Oishi Pillows 60g × 24 pcs</span><span>₱288</span></div>
+            <div class="order-item-row"><span>LPG 11kg × 1 unit</span><span>₱980</span></div>
+          </div>
+          <div class="order-card-bottom">
+            <div>
+              <div class="order-total-label">Order total</div>
+              <div class="order-total-value">₱1,268</div>
+            </div>
+            <div class="order-actions">
+              <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();rejectOrder(this,1)">Reject</button>
+              <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();confirmOrder(this,1)">Confirm</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-card" onclick="selectOrder(2)" id="card-2">
+          <div class="order-card-top">
+            <span class="order-card-id">ORD-008</span>
+            <span class="status pending">Pending</span>
+          </div>
+          <div class="order-meta">
+            <div class="order-meta-item">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+              Manalo Grocery
+            </div>
+            <div class="order-meta-item">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+              Apr 16, 4:45 PM
+            </div>
+          </div>
+          <div class="order-items-list">
+            <div class="order-item-row"><span>Pepsi 1.5L × 2 cases</span><span>₱1,360</span></div>
+            <div class="order-item-row"><span>Chippy BBQ 110g × 10 pcs</span><span>₱220</span></div>
+          </div>
+          <div class="order-card-bottom">
+            <div>
+              <div class="order-total-label">Order total</div>
+              <div class="order-total-value">₱1,580</div>
+            </div>
+            <div class="order-actions">
+              <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();rejectOrder(this,2)">Reject</button>
+              <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();confirmOrder(this,2)">Confirm</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Order detail -->
+    <div class="order-detail-panel">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">ORD-001 — Reyes Store</div>
+          <div class="detail-sub">Placed Apr 17, 10:32 AM · 2 items</div>
+        </div>
+        <span class="status pending">Pending</span>
+      </div>
+      <div class="detail-body">
+
+        <div class="detail-section">
+          <div class="detail-section-title">Customer info</div>
+          <div class="detail-row"><span>Name</span><span>Reyes Store</span></div>
+          <div class="detail-row"><span>Contact</span><span>09191234567</span></div>
+          <div class="detail-row"><span>Type</span><span>Retailer</span></div>
+          <div class="detail-row"><span>Delivery</span><span>Pick-up</span></div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Order items</div>
+          <div class="detail-item-row">
+            <div>
+              <div class="detail-item-name">San Miguel Pale Pilsen</div>
+              <div class="detail-item-qty">3 cases × ₱1,080</div>
+            </div>
+            <div class="detail-item-price">₱3,240</div>
+          </div>
+          <div class="detail-item-row">
+            <div>
+              <div class="detail-item-name">Coca-Cola 1.5L (case)</div>
+              <div class="detail-item-qty">2 cases × ₱720</div>
+            </div>
+            <div class="detail-item-price">₱1,440</div>
+          </div>
+          <div class="detail-total-block">
+            <div class="detail-total-row"><span>Subtotal</span><span>₱4,680.00</span></div>
+            <div class="detail-total-row"><span>Delivery fee</span><span>₱0.00</span></div>
+            <div class="detail-total-row grand"><span>Total</span><span>₱4,680.00</span></div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Notes from customer</div>
+          <div style="background:var(--gray-50);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;color:var(--gray-600);font-style:italic;">
+            "Please make sure the SMB is cold. Will pick up around 2PM."
+          </div>
+        </div>
+
+      </div>
+      <div class="detail-footer">
+        <button class="btn btn-danger" onclick="rejectOrder(this, 0)">Reject Order</button>
+        <button class="btn btn-primary" onclick="confirmOrder(this, 0)">Confirm Order</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const orders = [
+    {
+      id: 'ORD-001', customer: 'Reyes Store', time: 'Apr 17, 10:32 AM',
+      items: [
+        { name: 'San Miguel Pale Pilsen', qty: 3, unit: '₱1,080', total: 3240 },
+        { name: 'Coca-Cola 1.5L (case)',  qty: 2, unit: '₱720',   total: 1440 },
+      ],
+      total: 4680, contact: '09191234567', notes: '"Please make sure the SMB is cold. Will pick up around 2PM."'
+    },
+    {
+      id: 'ORD-007', customer: 'Garcia Minimart', time: 'Apr 17, 9:14 AM',
+      items: [
+        { name: 'Oishi Pillows 60g', qty: 24, unit: '₱12',  total: 288 },
+        { name: 'LPG 11kg',          qty: 1,  unit: '₱980', total: 980 },
+      ],
+      total: 1268, contact: '09201234567', notes: '"Deliver before noon if possible."'
+    },
+    {
+      id: 'ORD-008', customer: 'Manalo Grocery', time: 'Apr 16, 4:45 PM',
+      items: [
+        { name: 'Pepsi 1.5L',   qty: 2,  unit: '₱680', total: 1360 },
+        { name: 'Chippy BBQ 110g', qty: 10, unit: '₱22', total: 220 },
+      ],
+      total: 1580, contact: '09211234567', notes: '"No notes."'
+    },
+  ];
+
+  let selectedIdx = 0;
+
+  function selectOrder(idx) {
+    selectedIdx = idx;
+    document.querySelectorAll('.order-card').forEach((c, i) => {
+      c.style.borderColor  = i === idx ? 'var(--green)' : '';
+      c.style.borderWidth  = i === idx ? '1.5px' : '';
+    });
+    const o = orders[idx];
+    const panel = document.querySelector('.order-detail-panel');
+    panel.querySelector('.detail-title').textContent = `${o.id} — ${o.customer}`;
+    panel.querySelector('.detail-sub').textContent   = `Placed ${o.time} · ${o.items.length} items`;
+    panel.querySelector('.detail-row:nth-child(1) span:last-child').textContent = o.customer;
+    panel.querySelector('.detail-row:nth-child(2) span:last-child').textContent = o.contact;
+    const itemsContainer = panel.querySelector('.detail-section:nth-child(2)');
+    const itemRows = o.items.map(item => `
+      <div class="detail-item-row">
+        <div>
+          <div class="detail-item-name">${item.name}</div>
+          <div class="detail-item-qty">${item.qty} × ${item.unit}</div>
+        </div>
+        <div class="detail-item-price">₱${item.total.toLocaleString()}</div>
+      </div>
+    `).join('');
+    itemsContainer.innerHTML = `
+      <div class="detail-section-title">Order items</div>
+      ${itemRows}
+      <div class="detail-total-block">
+        <div class="detail-total-row"><span>Subtotal</span><span>₱${o.total.toLocaleString()}.00</span></div>
+        <div class="detail-total-row"><span>Delivery fee</span><span>₱0.00</span></div>
+        <div class="detail-total-row grand"><span>Total</span><span>₱${o.total.toLocaleString()}.00</span></div>
+      </div>
+    `;
+    panel.querySelector('.detail-section:nth-child(3) div:last-child').textContent = o.notes;
+  }
+
+  function confirmOrder(btn, idx) {
+    const card   = document.getElementById('card-' + idx);
+    const badge  = card.querySelector('.status');
+    badge.textContent  = 'Confirmed';
+    badge.className    = 'status confirmed';
+    card.style.opacity = '.6';
+    card.style.pointerEvents = 'none';
+    const detailBadge = document.querySelector('.detail-header .status');
+    if (detailBadge) { detailBadge.textContent = 'Confirmed'; detailBadge.className = 'status confirmed'; }
+    document.querySelector('.detail-footer').innerHTML =
+      '<div style="font-size:13px;color:var(--green-dark);font-weight:500;display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 20 20" fill="var(--green)"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Order confirmed successfully</div>';
+  }
+
+  function rejectOrder(btn, idx) {
+    if (!confirm('Are you sure you want to reject this order?')) return;
+    const card  = document.getElementById('card-' + idx);
+    const badge = card.querySelector('.status');
+    badge.textContent  = 'Rejected';
+    badge.className    = 'status rejected';
+    card.style.opacity = '.5';
+    card.style.pointerEvents = 'none';
+  }
+</script>
+</body>
+</html>
